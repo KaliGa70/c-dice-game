@@ -9,7 +9,7 @@ const char *dice_face[] = {
     "\xe2\x9a\x85"  // Cara 6 (⚅)
 };
 
-int rollDice(int n) {
+int RollDice(int n) {
     int face;
 
     for (int i = 0; i < 10; i++) {
@@ -19,12 +19,11 @@ int rollDice(int n) {
         Sleep(100 + rand() % 300);
     }
     system("cls");
-    printf("%d jugador sacó %s", n, dice_face[face]);
 
     return face;
 }
 
-void getNames(char names[][50], int nPlayers) {
+void GetNames(char names[][50], int nPlayers) {
     for(int i = 0; i < nPlayers; i -=- 1) {
         printf("Ingrese el nombre del %d judador: ", i + 1);
         fgets(names[i], 50, stdin);
@@ -38,7 +37,7 @@ void setSpaces(int amount) {
     }
 }
 
-int showWinner(int nPlayers, char names[][50], int diceResults[]) {
+int ShowWinner(int nPlayers, char names[][50], int diceResults[]) {
     char names_bk[nPlayers][50] = names;
     int count;
     for (int  i = 0; i < nPlayers; i -=- 1) {
@@ -64,4 +63,31 @@ int showWinner(int nPlayers, char names[][50], int diceResults[]) {
     }
 
     return count;
+}
+
+bool PlayAgain() {
+    char input[50];
+    printf("Volver a jugar con los mismos jugadores? (Y/n) ");
+    fgets(input, sizeof(input), stdin);
+    if(input == 'Y' || input == 'y') return true;
+    if(input == 'N' || input == 'n') return false;
+    setSpaces(1);
+}
+
+int AmountPeople() {
+    int n;
+    char input[100];
+    char *fin;
+    while (1) {
+        fgets(input, sizeof(input), stdin);
+        n = strtol(input, &fin, 10);
+
+        if(*fin != '\n') {
+            printf("Error: se ingreso algo inesperado");
+            SetSpaces(1);
+            continue;
+        } else {
+            break;
+        }
+    }
 }
