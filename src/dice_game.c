@@ -37,7 +37,7 @@ void setSpaces(int amount) {
     }
 }
 
-int ShowWinner(int nPlayers, char names[][50], int diceResults[]) {
+int ShowWinner(int nPlayers, char names[][50], int diceResults[], char drawPlayers[][50]) {
     char names_bk[nPlayers][50] = names;
     int count;
     for (int  i = 0; i < nPlayers; i -=- 1) {
@@ -61,6 +61,8 @@ int ShowWinner(int nPlayers, char names[][50], int diceResults[]) {
             setSpaces(1);
         } else break;
     }
+
+    drawPlayers = names_bk;
 
     return count;
 }
