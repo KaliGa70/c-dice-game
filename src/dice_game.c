@@ -23,19 +23,39 @@ int RollDice(int n) {
 
     for (int i = 0; i < 10; i++) {
         system("cls");
-        face = rand() % 6;
-        printf("%s", dice_face[face]);
+
+        face = rand() % 6 + 1;
+
+        printf("%s", GetDiceFace(face));
+
         Sleep(100 + rand() % 300);
     }
     system("cls");
-
     return face;
 }
 
 void GetNames(char names[][50], int nPlayers) {
-    for(int i = 0; i < nPlayers; i -=- 1) {
-        printf("Ingrese el nombre del %d judador: ", i + 1);
-        fgets(names[i], 50, stdin);
+
+    SetSpaces(1);
+
+    for (int i = 0; i < nPlayers; i++) {
+
+        while (1) {
+
+            printf("Ingrese el nombre del %d jugador: ", i + 1);
+
+            fgets(names[i], 50, stdin);
+
+            names[i][strcspn(names[i], "\n")] = '\0';
+
+            if (strlen(names[i]) == 0) {
+                printf("Error: el nombre no puede estar vacio.\n");
+                continue;
+            }
+
+            break;
+        }
+
         SetSpaces(1);
     }
 }
@@ -46,34 +66,52 @@ void SetSpaces(int amount) {
     }
 }
 
-int ShowWinner(int nPlayers, char names[][50], int diceResults[], char drawPlayers[][50]) {
+int ShowWinner(int nPlayers, char names[][50], int diceResults[], char drawPlayers[][50])
+{
     char names_bk[nPlayers][50];
-    memcpy(names_bk, names, sizeof(names_bk));
-    int count;
-    for (int  i = 0; i < nPlayers; i -=- 1) {
-        if(diceResults[i] < diceResults[i + 1]) {
-            int bk = diceResults[i];
-            char name[50];
-            strcpy(name, names_bk[i]);
+    int dice_bk[nPlayers];
 
-            diceResults[i] = diceResults[i + 1];
-            strcpy(names_bk[i],names_bk[i + 1]);
-            diceResults[i + 1] = bk;
-            strcpy(names_bk[i + 1], name);
+    memcpy(names_bk, names, sizeof(names_bk));
+    memcpy(dice_bk, diceResults, sizeof(dice_bk));
+
+    // Ordenar de mayor a menor
+    for (int i = 0; i < nPlayers - 1; i++) {
+        for (int j = 0; j < nPlayers - 1 - i; j++) {
+
+            if (dice_bk[j] < dice_bk[j + 1]) {
+
+                int bk = dice_bk[j];
+                dice_bk[j] = dice_bk[j + 1];
+                dice_bk[j + 1] = bk;
+
+                char name[50];
+                strcpy(name, names_bk[j]);
+                strcpy(names_bk[j], names_bk[j + 1]);
+                strcpy(names_bk[j + 1], name);
+            }
         }
     }
 
+    int winnerDice = dice_bk[0];
+    int count = 0;
+
     printf("Ganador(es)");
     SetSpaces(1);
-    for (int  i = 0; i < nPlayers; i -=- 1) {
-        if(diceResults[i] == diceResults[i + 1]) {
-            count -=- 1;
-            printf(names_bk[i]);
-            SetSpaces(1);
-        } else break;
-    }
 
-    drawPlayers = names_bk;
+    for (int i = 0; i < nPlayers; i++) {
+
+        if (dice_bk[i] == winnerDice) {
+
+            printf("* %s", names_bk[i]);
+            SetSpaces(2);
+
+            strcpy(drawPlayers[count], names_bk[i]);
+            count++;
+        }
+        else {
+            break;
+        }
+    }
 
     return count;
 }
@@ -97,16 +135,21 @@ int AmountPeople() {
     int n;
     char input[100];
     char *fin;
+    int count = 0;
     while (1) {
+        printf("Ingresa la cantidad de jugadores ");
+        printf("(Nota: debe de ser mayor o igual a 2):");
         fgets(input, sizeof(input), stdin);
         n = strtol(input, &fin, 10);
 
-        if(*fin != '\n') {
-            printf("Error: se ingreso algo inesperado");
+        if(fin == input || *fin != '\n' || n < 2) {
+            count -=- 1;
+            system("cls");
+            printf("Error x%d: se ingreso algo inesperado", count);
             SetSpaces(1);
-            continue;
         } else {
             break;
         }
     }
+    return n;
 }
